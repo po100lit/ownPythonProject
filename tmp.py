@@ -3,4 +3,4 @@ def main(*args):
 
 
 if __name__ == '__main__':
-    main(2,3,4,5)
+    main(2, 3, 4, 5)
