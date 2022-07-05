@@ -1,6 +1,6 @@
 import random as rd
 
-def_list = [700, 701, 702, 705, 706, 707, 708, 747, 771, 775, 776, 777, 778]
+defcode_list = [700, 701, 702, 705, 706, 707, 708, 747, 771, 775, 776, 777, 778]
 count_number = int(input('Введите количество номеров: '))
 
 
@@ -15,13 +15,14 @@ def gen2digit():
 
 
 def gen_phone_num():
-    res = f'+7 ({rd.choice(def_list)}) {gen3digit()}-{gen2digit()}-{gen2digit()}'
+    res = f'+7 ({rd.choice(defcode_list)}) {gen3digit()}-{gen2digit()}-{gen2digit()}'
     return res
 
 
-def print_num():
+def main():
     for i in range(count_number):
         print(gen_phone_num())
 
 
-print_num()
+if __name__ == '__main__':
+    main()

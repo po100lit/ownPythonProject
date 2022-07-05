@@ -6,9 +6,7 @@ i = 0
 n = len(array)
 
 while n - i > 0:
-    temp = array[i]
-    array[i] = array[n - 1]
-    array[n - 1] = temp
+    array[i], array[n - 1] = array[n - 1], array[i]
     i = i + 1
     n = n - 1
 

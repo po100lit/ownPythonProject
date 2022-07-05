@@ -25,6 +25,12 @@ def generate_day(y, m):
             d = rd.randint(1, 28)
     return '{:02}'.format(d)
 
-count = int(input('количество генерируемых дат: '))
-for i in range(count):
-    print(f'{generate_day(generate_year(), generate_month())}.{generate_month()}.{generate_year()}')
+
+def main():
+    count = int(input('количество генерируемых дат: '))
+    for i in range(count):
+        print(f'{generate_day(generate_year(), generate_month())}.{generate_month()}.{generate_year()}')
+
+
+if __name__ == '__main__':
+    main()
