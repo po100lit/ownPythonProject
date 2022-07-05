@@ -2,10 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import time
+import json
 
 
 start_time = time.time()
-url = 'https://habr.com/ru/company/yandex/blog/'
+url = 'https://habr.com/ru/company/kaspersky/blog/'
 host = 'https://habr.com'
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.160 YaBrowser/22.5.3.684 Yowser/2.5 Safari/537.36',
@@ -22,8 +23,7 @@ def get_pagination():
     """Находим номер последней страницы пагинации"""
     request = requests.get(url=url, headers=headers)
     soup = BeautifulSoup(request.text, 'lxml')
-    last_pgn_page = int(
-        soup.find('div', class_='tm-pagination').findAll('a', class_='tm-pagination__page')[-1].get_text().strip())
+    last_pgn_page = int(soup.find('div', class_='tm-pagination').findAll('a', class_='tm-pagination__page')[-1].get_text().strip())
     return last_pgn_page
 
 
@@ -40,6 +40,7 @@ def collect_links():
     page_count = 0
     global error_count
     global total_pages_count
+    pub_info = []
     for page in collect_pages():
         request = requests.get(url=page, headers=headers)
         soup = BeautifulSoup(request.text, 'lxml')
@@ -51,7 +52,7 @@ def collect_links():
             pub_date = soup.find('span', class_='tm-article-snippet__datetime-published').find('time').get('datetime').split('T')[0]
             pub_title = soup.find('h1', class_='tm-article-snippet__title_h1').get_text().strip().replace('&nbsp;', ' ')
             try:
-                pub_content = soup.find('div', class_='article-formatted-body_version-1').get_text().strip().replace('&nbsp;', ' ')[:200]
+                pub_content = soup.find('div', class_='article-formatted-body_version-1').get_text().strip().replace('&nbsp;', ' ').replace('\n', '').replace('\r', '')[:500]+'...'
                 total_pages_count += 1
             except Exception as ex:
                 pub_content = f'[X] - ошибка парсинга {ex}'
@@ -59,8 +60,19 @@ def collect_links():
             with open('habr.csv', 'a', encoding='utf-8', newline='') as file:
                 writer = csv.writer(file, delimiter=',')
                 writer.writerow([pub_date, pub_title, pub_link, pub_content])
+            pub_info.append(
+                {
+                    'Дата': pub_date,
+                    'Название': pub_title,
+                    'Ссылка': pub_link,
+                    'Краткое содержание': pub_content
+                }
+            )
         page_count += 1
         print(f'[i] Страница {page_count} обработана...')
+
+    with open('habr.json', 'a', encoding='utf-8') as file:
+        json.dump(pub_info, file, indent=4, ensure_ascii=False)
 
 
 def main():
@@ -68,7 +80,7 @@ def main():
     print()
     print(f'[✓] Парсинг закончен. Получены данные с {total_pages_count} статей.')
     print(f'[!] Ошибок парсинга {error_count}')
-    print(f'Затрачено времени: {round(((time.time() - start_time)/60), 2)} минут.')
+    print(f'Затрачено времени: ~{int((time.time() - start_time)/60)} минут.')
 
 
 if __name__ == "__main__":
