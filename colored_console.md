@@ -69,6 +69,17 @@ print("Снова обычный текст")
 
 `Style.RESET_ALL` - сброс к начальным настройкам цветов
 
+**Available formatting constants are:**
+
+- **Fore**: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
+- **Back**: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
+- **Style**: DIM, NORMAL, BRIGHT, RESET_ALL
+
+**These are fairly well supported, but not part of the standard:**
+
+- **Fore**: LIGHTBLACK_EX, LIGHTRED_EX, LIGHTGREEN_EX, LIGHTYELLOW_EX, LIGHTBLUE_EX, LIGHTMAGENTA_EX, LIGHTCYAN_EX, LIGHTWHITE_EX
+- **Back**: LIGHTBLACK_EX, LIGHTRED_EX, LIGHTGREEN_EX, LIGHTYELLOW_EX, LIGHTBLUE_EX, LIGHTMAGENTA_EX, LIGHTCYAN_EX, LIGHTWHITE_EX
+
 ---
 
 ## Библиотека termcolor
@@ -90,3 +101,34 @@ cprint('Вывод с помощью cprint', 'green', 'on_blue')
 Первая позволяет создать строку для последующего вывода с необходимыми параметрами цветов и эффектов.
 
 Вторая сразу производит вывод в консоль.
+
+**Available text colors:**
+
+- grey
+- red
+- green
+- yellow
+- blue
+- magenta
+- cyan
+- white
+
+**Available text highlights:**
+
+- on_grey
+- on_red
+- on_green
+- on_yellow
+- on_blue
+- on_magenta
+- on_cyan
+- on_white
+
+**Available attributes:**
+
+- bold
+- dark
+- underline
+- blink
+- reverse
+- concealed
