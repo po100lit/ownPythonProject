@@ -53,15 +53,21 @@
 `pip install colorama`
 
 ```commandline
-1 from colorama import Fore, Back, Style
-2 
-3 colorama.init()
-4 
-5 print(Fore.RED + "Красный текст")
-6 print(Back.BLUE + "Синий фон")
-7 print(Style.RESET_ALL)
-8 print("Снова обычный текст")
+from colorama import Fore, Back, Style
+
+colorama.init()
+
+print(Fore.RED + "Красный текст")
+print(Back.BLUE + "Синий фон")
+print(Style.RESET_ALL)
+print("Снова обычный текст")
 ```
+
+`Fore.RED` - меняет цвет текста
+
+`Back.BLUE` - меняет цвет фона
+
+`Style.RESET_ALL` - сброс к начальным настройкам цветов
 
 ---
 
@@ -72,13 +78,15 @@
 `pip install termcolor`
 
 ```commandline
-1 from termcolor import colored, cprint
-2 
-3 print(colored('Привет мир!', 'red', attrs=['underline']))
-4 print('Привет, я люблю тебя!')
-5 cprint('Вывод с помощью cprint', 'green', 'on_blue')
+from termcolor import colored, cprint
+
+print(colored('Привет мир!', 'red', attrs=['underline']))
+print('Привет, я люблю тебя!')
+cprint('Вывод с помощью cprint', 'green', 'on_blue')
 ```
 
 Используем функции colored и cprint.
+
 Первая позволяет создать строку для последующего вывода с необходимыми параметрами цветов и эффектов.
+
 Вторая сразу производит вывод в консоль.
