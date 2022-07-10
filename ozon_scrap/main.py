@@ -11,7 +11,7 @@ headers = {
 def get_data():
     r = requests.get(url=url, headers=headers)
     print(r)
-    # TODO error 403 found, try json
+    # TODO error 403 found, try json or something else)
 
 
 def main():
