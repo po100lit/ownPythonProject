@@ -1,7 +1,7 @@
 # разложить на простые множители
 
 def main():
-    num = int(input('Введите число: ')
+    num = int(input('Введите число: '))
     divisors = []
     for i in range(1, int(num**0.5)+1):
         is_prime = 0
