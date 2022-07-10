@@ -8,6 +8,10 @@ def main():
     print('min = ', (a, b)[a > b])
     print('max = ', (a < b) * b + (a > b) * a)
     print('min = ', (a < b) * a + (a > b) * b)
+    print('max = ', (a, b)[bool(int(b / a))])
+    print('min = ', (a, b)[bool(int(a / b))])
+    print('max = ', (bool(int(b / a))) * b + (bool(int(a / b))) * a)
+    print('min = ', (bool(int(b / a))) * a + (bool(int(a / b))) * b)
 
 
 if __name__ == "__main__":
