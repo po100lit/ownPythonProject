@@ -10,7 +10,7 @@ def numeral_system(number, from_ns, to_ns=10):
     :param number: number to convert - must be a string
     :param from_ns: input numeral system - must ba an integer
     :param to_ns: output numeral system - must ba an integer (default 10)
-    :return: number as string
+    :return: 'int' if 'to_ns'=10 else 'string'
     """
     try:
         if to_ns == 10:
@@ -29,11 +29,11 @@ def numeral_system(number, from_ns, to_ns=10):
                 number //= to_ns
             return result[::-1]
     except ValueError:
-        return 'Incorrect input number'
+        return "\033[31m{}".format('Incorrect input number or input numeral system')
 
 
 def main():
-    print(numeral_system('101', 11))
+    print(numeral_system('LgB7tpd1', 29))
 
 
 if __name__ == "__main__":
