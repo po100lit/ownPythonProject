@@ -28,7 +28,7 @@ def letters_stat():
             if word.startswith(letter):
                 k += 1
         stat_dict[letter] = k
-    print(sorted(stat_dict.items(), key=lambda x: x[1]))
+    print(sorted(stat_dict.items(), key=lambda x: x[1], reverse=True))
 
 
 def main():
