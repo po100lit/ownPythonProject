@@ -2,9 +2,11 @@ import requests
 from bs4 import BeautifulSoup as b
 import random
 import telebot
+import os
+
 
 URL = 'https://www.anekdot.ru/last/good/'
-API_key = '5238225700:AAGo86MOfTM2f75gOMKr2Q1jzjcL65SwCfM'
+API_key = os.getenv('TOKEN')
 
 
 def parser(url):

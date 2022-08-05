@@ -65,12 +65,14 @@ def main():
     unique_ids = gen_id()
     with open('data.csv', 'w', encoding='utf-8', newline='') as file:
         writer = csv.writer(file, delimiter=',')
-        writer.writerow(['id', 'Фамилия', 'Имя', 'Отчество', 'Телефон', 'Дата рождения', 'Профессия', 'Адрес'])
+        # writer.writerow(['id', 'Фамилия', 'Имя', 'Отчество', 'Телефон', 'Дата рождения', 'Профессия', 'Адрес'])
+        writer.writerow(['id', 'Фамилия', 'Имя', 'Телефон', 'Профессия'])
     for i in range(30):
         fio = gen_name().split()
         with open('data.csv', 'a', encoding='utf-8', newline='') as file:
             writer = csv.writer(file, delimiter=',')
-            writer.writerow([unique_ids[i], fio[2], fio[0], fio[1], gen_phone(), gen_date(), fake_job(), fake_adr()])
+            writer.writerow([unique_ids[i], fio[2], fio[0], gen_phone(), fake_job()])
+            # writer.writerow([unique_ids[i], fio[2], fio[0], fio[1], gen_phone(), gen_date(), fake_job(), fake_adr()])
 
 
 if __name__ == '__main__':
