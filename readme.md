@@ -13,3 +13,7 @@ Install all requirements:
 Ununstall all requirements:
 
 ```pip uninstall -r requirements.txt -y```
+
+Update pip
+
+```python.exe -m pip install --upgrade pip```
