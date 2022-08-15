@@ -1,6 +1,7 @@
+import json
+
 from bs4 import BeautifulSoup
 import requests
-import lxml
 import csv
 
 host = 'https://www.technodom.kz'
@@ -20,7 +21,7 @@ def find_pages():
     html = answer.text
     soup = BeautifulSoup(html, 'lxml')
     found_pages = soup.find('div', class_='Paginator__List').find_all('p', class_='Typography')
-    if len(found_pages) >= 5 and len(found_pages) < 10:
+    if 5 <= len(found_pages) < 10:
         found_pages = soup.find('div', class_='Paginator__List').find_all('a').__getitem__(-1)
         str_page = str(found_pages)
         str_page = str_page.split('=')
@@ -72,7 +73,7 @@ def get_parse():
                 {
                     'title': item.find('h1', class_='Typography').get_text(strip=True),
                     'price': item.find('div', class_='product-info__prices product-prices').get_text(
-                        strip=True).replace('\xa0', ''),
+                        strip=True).replace('\xa0', '').rstrip('₸').split('₸'),
                     'link': link
                 }
             )
@@ -81,12 +82,14 @@ def get_parse():
 
 def save_csv(goods, file_name):
     with open(file_name, 'w', encoding='utf-8', newline='') as file:
-        writer = csv.writer(file, delimiter=';')
+        writer = csv.writer(file, delimiter=',')
         writer.writerow(csv_head)
         for item in goods:
             writer.writerow([item['title'], item['price'], item['link']])
+    with open('data.json', 'w', encoding='utf-8') as file:
+        json.dump(goods, file, indent=4, ensure_ascii=False)
 
 
 save_csv(get_parse(), file_name)
 print()
-print(f'Парсин завершен!')
+print(f'Парсинг завершен!')
