@@ -5,46 +5,39 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 import re
 
-host = 'https://market.csgo.com'
-headers = {
-    "User - Agent": "Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML,"
-                    " like Gecko) Chrome / 102.0.5005.167 YaBrowser / 22.7.3.822 Yowser / 2.5 Safari / 537.36",
-    "Accept": "application / json, text / javascript, * / *; q = 0.01"
-}
-error_count = 0
 
+def get_data():
+    error_count = 0
+    host = 'https://market.csgo.com'
+    headers = {
+        "Accept": "application / json, text / javascript, * / *; q = 0.01",
+        "User - Agent": "Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML,"
+                        " like Gecko) Chrome / 102.0.5005.167 YaBrowser / 22.7.3.822 Yowser / 2.5 Safari / 537.36"
+    }
 
-def save_links():
-    global error_count
     response = requests.get(url=host, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
+
     last_page = int(soup.find('div', class_='page-counter').find('span', id='total_pages').get_text())
     print(f'[INFO] Total pages found: {last_page}')
     links = []
-    for page in tqdm(range(last_page), ncols=100, unit=' page'):
+    for page in tqdm(range(last_page), ncols=100, unit=' page', desc='Page parsing'):
         url = host + f'?s=price&p={page}&sd=desc'
+
         resp = requests.get(url=url, headers=headers)
         soup = BeautifulSoup(resp.text, 'lxml')
+
         try:
             res = soup.find('div', class_='market-items').find_all('a', class_='item')
         except:
             error_count += 1
+
         for i in res:
             links.append(host + i.get('href'))
-    with open('links.txt', 'w', encoding='utf-8') as file:
-        for i in set(links):
-            file.write(i + '\n')
 
-
-def collect_info(filename):
-    global error_count
-    all_data = []
-    with open(filename, 'r', encoding='utf-8') as file:
-        for i in file:
-            all_data.append(i.strip())
-    print(f'[INFO] Total links found: {len(all_data)}')
     result = {}
-    for item in tqdm(all_data, ncols=100, unit=' item'):
+
+    for item in tqdm(links, ncols=100, unit=' item', desc='Item parsing'):
         resp = requests.get(url=item, headers=headers)
         goods_id = '-'.join(item.split('/')[4].split('-', maxsplit=2)[:2])
         soup = BeautifulSoup(resp.text, 'lxml')
@@ -73,16 +66,16 @@ def collect_info(filename):
         try:
             best_price = soup.find('div', class_='ip-bestprice').get_text().strip().replace(' ', '')
         except:
-            best_price = "Price found"
+            best_price = "Price not found"
             error_count += 1
         # Описание
         try:
             d_description = str(soup.find('div', id='descr').find_all('p')[2:]).replace('> <', '><').replace(',', '')
             clear_html = re.compile('<.*?>')
-            c_description = re.sub(clear_html, '', d_description) \
-                .replace('   ', ' ').replace('  ', '').strip().replace('[', '').replace(']', '')
+            c_description = re.sub(clear_html, '', d_description).strip()
+            c_description = ' '.join(c_description.split()).replace('\n', ' ').replace('[', '').replace(']', '').strip()
         except:
-            c_description = "Description found"
+            c_description = "Description not found"
             error_count += 1
         # Картинка
         try:
@@ -99,25 +92,22 @@ def collect_info(filename):
             'Description': c_description,
             'Image': img
         }
-    print(f'{len(all_data)} items was parsed')
-    print(f'Parse errors {error_count}')
-    return result
 
+    print(f'Parsing errors: {error_count}')
 
-def save_data(dictionary):
     with open('data.json', 'w', encoding='utf-8') as file:
-        json.dump(dictionary, file, indent=4, ensure_ascii=False)
+        json.dump(result, file, indent=4, ensure_ascii=False)
+
     with open('data.csv', 'w', encoding='utf-8', newline='') as file:
         writer = csv.writer(file, delimiter=',')
-        for k, v in dictionary.items():
+        writer.writerow(['ID','Title', 'Status', 'Type', 'Tags', 'Best price', 'Description', 'Image'])
+        for k, v in result.items():
             writer.writerow((k, v['Title'], v['Status'], v['Type'],
                              v['Tags'], v['Best price'], v['Description'], v['Image']))
 
 
 def main():
-    save_links()
-    tmp_dict = collect_info('links.txt')
-    save_data(tmp_dict)
+    get_data()
 
 
 if __name__ == '__main__':
